@@ -1,0 +1,132 @@
+{% load i18n admin_urls %}
+{% load static %}
+
+<script>
+window.addEventListener('load', function() {
+    console.log('Django ModelAdmin Filterset builder loaded');
+    qs_to_filterset();
+});
+
+function qs_to_filterset() {
+    params = getParams(location);
+    if (params.custom_search){
+        filters = params.custom_search.split('||');
+        for (var i = 0; i < filters.length; i++) {
+            var filter = filters[i].split(',');
+            filterset_dom = filterset_duplicate();
+            filterset_dom.getElementsByClassName('cs_name')[0].value = filter[0];
+            filterset_dom.getElementsByClassName('cs_action')[0].value = filter[1];
+            filterset_dom.getElementsByClassName('cs_operator')[0].value = filter[2];
+            filterset_dom.getElementsByClassName('cs_value')[0].value = filter[3];
+        }
+    }
+}
+
+/**
+ * source: https://css-tricks.com/snippets/javascript/get-url-variables/
+ * @param  {String} url The URL
+ * @return {Object}     The URL parameters
+ */
+var getParams = function (url) {
+    var params = {};
+    var parser = document.createElement('a');
+    parser.href = url;
+    var query = parser.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        params[pair[0]] = decodeURIComponent(pair[1]);
+    }
+    return params;
+};
+
+function build_filter(){
+    // ?custom_search=filter,mail__exact,peppelinux%40yahoo.it
+    cs_list = []
+
+    // check if there are others params
+    params = getParams(location);
+
+    // clean preexistent custom_searches
+    if (params.custom_search){delete(params.custom_search)}
+
+    params_len = Object.keys(params).length;
+    if (params_len > 1){
+      other_filters = getParams(location)
+      url = new URL(location);
+      first_val = url.search  +'&';
+      }
+    else {first_val = '?';}
+    first_val += 'custom_search=';
+    // first_val = '?custom_search=';
+
+    for (i = 0; i < 20; i++) {
+      if (!document.getElementsByClassName('cs_name')[i]) {break;}
+      if (!document.getElementsByClassName('cs_value')[i].value) {continue;}
+      search = [document.getElementsByClassName('cs_name')[i].value,
+                document.getElementsByClassName('cs_action')[i].value,
+                document.getElementsByClassName('cs_operator')[i].value,
+                document.getElementsByClassName('cs_value')[i].value]
+      // console.log(search);
+      // alert(search);
+      cs_list.push(search.join(','));
+    }
+    params = cs_list.join('||');
+    // console.log(params);
+    window.location = first_val + params;
+}
+
+var dup_cnt = 0;
+function filterset_duplicate() {
+    filterset_node = document.getElementsByClassName('cs_container')[0];
+    clone = filterset_node.cloneNode(true); // "deep" clone
+
+    // create delete button
+    filter_delete_div = document.createElement('div');
+    filter_delete_div.innerHTML = '<button>{% trans "delete" %}</button>'.trim();
+    filter_delete_div.setAttribute('onclick', 'filterset_remove(this.parentNode);');
+    clone.append(filter_delete_div)
+    filterset_node.parentNode.appendChild(clone);
+    return clone;
+}
+
+function filterset_remove(el) {
+  el.remove();
+}
+</script>
+
+<div onload="filterset_url_qs_init">
+    <h3 id="ldap_search" style="">LDAP {% trans "Search" %}</h3>
+
+    <div div="filterset-0" class="cs_container" style="padding: 15px">
+        <select name="cs_name_0" class="cs_name" style="margin-right: 13px;">
+        {% for choice in choices %}
+            <option value="{{ choice.display }}">{{ choice.display }}</option>
+        {% endfor %}
+        </select>
+
+        <select name="cs_operator_0" class="cs_operator" required  style="margin-right: 13px;">
+          <option value="exact">exact</option>
+          <option value="iexact">iexact</option>
+          <option value="icontains">icontains</option>
+          <option value="contains">contains</option>
+          <option value="startswith">startswith</option>
+          <option value="endswith">endswith</option>
+          <option value="gte">gte</option>
+          <option value="lte">lte</option>
+          <option value="is_null">is_null</option>
+        </select>
+
+        <select name="cs_action_0" class="cs_action" style="margin-right: 13px;">
+          <option value="filter">filter</option>
+          <option value="exclude">exclude</option>
+        </select>
+
+        <input name="cs_value_0" class="cs_value" placeholder="{% trans "value" %}" type="text">
+    </div>
+</div>
+
+<div class="controls" style="padding:15px;">
+    <input type="button" onclick="filterset_duplicate()" value="{% trans 'Add' %}">
+    <input type="submit" onclick="javascript:build_filter();" value="{% trans 'Search' %}">
+</div>
