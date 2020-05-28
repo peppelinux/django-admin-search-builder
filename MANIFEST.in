@@ -1,0 +1,5 @@
+include AUTHORS
+include LICENSE
+include README.md
+include admin_adv_search_builder/templates/*
+include admin_adv_search_builder/templates/filters/*
