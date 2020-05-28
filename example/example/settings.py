@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'admin_adv_search_builder'
+    'admin_adv_search_builder',
+    'identity'
 ]
 
 MIDDLEWARE = [
