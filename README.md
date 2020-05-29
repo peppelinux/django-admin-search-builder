@@ -1,7 +1,7 @@
 # django-admin-search-builder
 Django app that makes you able to build advanced queries via admin filters UI
 
-This Application aims to give you the faster and easier way to build and run advanced queries though the Django Admin ModelAdmin User Interface, using Django's ORM. See the example project and the gallery.
+This Application aims to give you the faster and easier way to build and run advanced queries through the Django Admin ModelAdmin User Interface, using Django's ORM. See the example project and the gallery.
 
 ### Setup
 
@@ -14,7 +14,7 @@ in `settings.INSTALLED_APPS` add
     'admin_adv_search_builder',
 ````
 
-in your ModelAdmin, use it following this example
+in your ModelAdmin, use the following example
 ````
 from admin_adv_search_builder.filters import AdvancedSearchBuilder
 from django.contrib import admin
