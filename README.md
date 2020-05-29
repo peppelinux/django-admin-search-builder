@@ -14,7 +14,7 @@ in `settings.INSTALLED_APPS` add
     'admin_adv_search_builder',
 ````
 
-in your ModelAdmin, use it following this example
+in your ModelAdmin, use the following example
 ````
 from admin_adv_search_builder.filters import AdvancedSearchBuilder
 from django.contrib import admin
