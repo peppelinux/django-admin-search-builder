@@ -21,7 +21,7 @@ setup(
     description="Django Admin Search Builder",
     long_description=README,
     long_description_content_type='text/markdown',
-    url='https://github.com/UniversitaDellaCalabria/django-admin-search-builder',
+    url='https://github.com/peppelinux/django-admin-search-builder',
     author='Giuseppe De Marco',
     author_email='giuseppe.demarco@unical.it',
     classifiers=[
